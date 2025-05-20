@@ -43,7 +43,7 @@ const compilerVersions = [
 ];
 
 export function UploadSourceForm() {
-  const { analysisOptions, network } = useAnalysisStore();
+  const { analysisOptions, setAnalysisOption, network } = useAnalysisStore();
   const { setAnalysisModalOpen, setProgress } = useUIStore();
   const { startPolling, cancelAnalysis } = useAnalysisProgress();
   const [isUploading, setIsUploading] = useState(false);
@@ -294,7 +294,9 @@ export function UploadSourceForm() {
       {/* Analysis Options */}
 <AnalysisOptions
   options={analysisOptions}
+  onChange={setAnalysisOption}
 />
+      {/* Analysis Options */}
       
       {/* Form Errors */}
       {errors.files && (
