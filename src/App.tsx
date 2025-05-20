@@ -11,12 +11,12 @@ import AnalyzeContract from "./pages/AnalyzeContract";
 import Reports from "./pages/Reports";
 import Statistics from "./pages/Statistics";
 import NotFound from "./pages/NotFound";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const App = () => {
-  // Create a client once for the entire app
-  const [queryClient] = useState(
-    () => new QueryClient({
+  // Create a client with non-React dependencies
+  const [queryClient] = useState(() => 
+    new QueryClient({
       defaultOptions: {
         queries: {
           staleTime: 5 * 60 * 1000, // 5 minutes
@@ -27,11 +27,11 @@ const App = () => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark">
+    <ThemeProvider defaultTheme="dark">
+      <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
-          <Sonner />
+          <Sonner position="top-right" closeButton richColors />
           <div className="min-h-screen bg-background text-foreground">
             <BrowserRouter>
               <Header />
@@ -47,8 +47,8 @@ const App = () => {
             </BrowserRouter>
           </div>
         </TooltipProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 

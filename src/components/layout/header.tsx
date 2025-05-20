@@ -1,6 +1,7 @@
 
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 
 export function Header() {
   const location = useLocation();
@@ -13,10 +14,13 @@ export function Header() {
     <header className="w-full bg-background border-b border-gray-800">
       <div className="container mx-auto">
         <div className="flex flex-col space-y-4 p-4 md:p-0">
-          <div className="flex items-center h-16">
+          <div className="flex items-center justify-between h-16">
             <h1 className="text-2xl font-bold text-red-500">
               Avalanche Smart Contract Auditor
             </h1>
+            <div className="hidden md:flex">
+              <WalletConnectButton />
+            </div>
           </div>
           
           <nav className="flex">

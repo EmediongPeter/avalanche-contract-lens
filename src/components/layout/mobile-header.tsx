@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 
 export function MobileHeader() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,14 +22,19 @@ export function MobileHeader() {
             Avalanche Auditor
           </h1>
           
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden"
-          >
-            {isOpen ? <X /> : <Menu />}
-          </Button>
+          <div className="flex items-center space-x-2">
+            <div className="mr-2">
+              <WalletConnectButton />
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden"
+            >
+              {isOpen ? <X /> : <Menu />}
+            </Button>
+          </div>
         </div>
         
         {isOpen && (
