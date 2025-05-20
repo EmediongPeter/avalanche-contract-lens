@@ -1,67 +1,17 @@
 
 import { create } from "zustand";
+import { NetworkType, AnalysisResult } from "@/services/analysis";
 
-export type NetworkType = "Mainnet" | "Fuji" | "Local" | string;
-export type AnalysisType = "Slither" | "Mythril" | "Avalanche-Specific" | "Gas";
-export type IssueLevel = "Critical" | "High" | "Medium" | "Low" | "Info";
-
-interface Report {
-  id: string;
-  contract: string;
-  network: NetworkType;
-  status: "Running" | "Completed" | "Failed";
-  issues: {
-    critical: number;
-    high: number;
-    medium: number;
-    low: number;
-    info: number;
-  };
-  date: string;
-}
-
+// UI Store
 interface UIState {
   isLoading: boolean;
   progress: number;
   analysisModalOpen: boolean;
-  currentReport: Report | null;
+  currentReport: AnalysisResult | null;
   setLoading: (isLoading: boolean) => void;
   setProgress: (progress: number) => void;
   setAnalysisModalOpen: (open: boolean) => void;
-  setCurrentReport: (report: Report | null) => void;
-}
-
-interface UserState {
-  address: string | null;
-  isConnected: boolean;
-  setAddress: (address: string | null) => void;
-  setConnected: (connected: boolean) => void;
-}
-
-interface AnalysisState {
-  analysisOptions: {
-    slither: boolean;
-    mythril: boolean;
-    avalanche: boolean;
-    gas: boolean;
-  };
-  contractAddress: string;
-  network: NetworkType;
-  setAnalysisOption: (option: keyof AnalysisState["analysisOptions"], value: boolean) => void;
-  setContractAddress: (address: string) => void;
-  setNetwork: (network: NetworkType) => void;
-}
-
-interface ReportsState {
-  reports: Report[];
-  filter: {
-    criticalOnly: boolean;
-    highOnly: boolean;
-    mediumLowOnly: boolean;
-  };
-  addReport: (report: Report) => void;
-  setReports: (reports: Report[]) => void;
-  setFilter: (filter: Partial<ReportsState["filter"]>) => void;
+  setCurrentReport: (report: AnalysisResult | null) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -72,44 +22,90 @@ export const useUIStore = create<UIState>((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
   setProgress: (progress) => set({ progress }),
   setAnalysisModalOpen: (open) => set({ analysisModalOpen: open }),
-  setCurrentReport: (report) => set({ currentReport: report }),
+  setCurrentReport: (report) => set({ currentReport: report })
 }));
+
+// User Store
+interface UserState {
+  address: string | null;
+  isConnected: boolean;
+  setAddress: (address: string | null) => void;
+  setConnected: (connected: boolean) => void;
+}
 
 export const useUserStore = create<UserState>((set) => ({
   address: null,
   isConnected: false,
   setAddress: (address) => set({ address }),
-  setConnected: (connected) => set({ isConnected: connected }),
+  setConnected: (connected) => set({ isConnected: connected })
 }));
+
+// Analysis Store
+interface AnalysisOptions {
+  slither: boolean;
+  mythril: boolean;
+  avalanche: boolean;
+  gas: boolean;
+}
+
+interface AnalysisState {
+  analysisOptions: AnalysisOptions;
+  contractAddress: string;
+  network: NetworkType;
+  setAnalysisOption: (option: keyof AnalysisOptions, value: boolean) => void;
+  setContractAddress: (address: string) => void;
+  setNetwork: (network: NetworkType) => void;
+}
 
 export const useAnalysisStore = create<AnalysisState>((set) => ({
   analysisOptions: {
     slither: true,
     mythril: true,
     avalanche: true,
-    gas: false,
+    gas: false
   },
   contractAddress: "",
-  network: "Mainnet",
-  setAnalysisOption: (option, value) => 
-    set((state) => ({
-      analysisOptions: {
-        ...state.analysisOptions,
-        [option]: value,
-      },
-    })),
+  network: "Avalanche Mainnet",
+  setAnalysisOption: (option, value) => set((state) => ({
+    analysisOptions: {
+      ...state.analysisOptions,
+      [option]: value
+    }
+  })),
   setContractAddress: (address) => set({ contractAddress: address }),
-  setNetwork: (network) => set({ network }),
+  setNetwork: (network) => set({ network })
 }));
+
+// Reports Store
+interface ReportsFilter {
+  criticalOnly: boolean;
+  highOnly: boolean;
+  mediumLowOnly: boolean;
+}
+
+interface ReportsState {
+  reports: AnalysisResult[];
+  filter: ReportsFilter;
+  addReport: (report: AnalysisResult) => void;
+  setReports: (reports: AnalysisResult[]) => void;
+  setFilter: (filter: Partial<ReportsFilter>) => void;
+}
 
 export const useReportsStore = create<ReportsState>((set) => ({
   reports: [],
   filter: {
     criticalOnly: false,
     highOnly: false,
-    mediumLowOnly: false,
+    mediumLowOnly: false
   },
-  addReport: (report) => set((state) => ({ reports: [report, ...state.reports] })),
+  addReport: (report) => set((state) => ({
+    reports: [report, ...state.reports]
+  })),
   setReports: (reports) => set({ reports }),
-  setFilter: (filter) => set((state) => ({ filter: { ...state.filter, ...filter } })),
+  setFilter: (filter) => set((state) => ({
+    filter: {
+      ...state.filter,
+      ...filter
+    }
+  }))
 }));

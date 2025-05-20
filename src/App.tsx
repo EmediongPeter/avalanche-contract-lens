@@ -11,32 +11,36 @@ import AnalyzeContract from "./pages/AnalyzeContract";
 import Reports from "./pages/Reports";
 import Statistics from "./pages/Statistics";
 import NotFound from "./pages/NotFound";
+import { useEffect, useState } from "react";
 
-const queryClient = new QueryClient();
+// Create a client
+const App = () => {
+  const [queryClient] = useState(() => new QueryClient());
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <div className="min-h-screen bg-background text-foreground">
-          <BrowserRouter>
-            <Header />
-            <MobileHeader />
-            <main className="min-h-[calc(100vh-16rem)]">
-              <Routes>
-                <Route path="/" element={<AnalyzeContract />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/statistics" element={<Statistics />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-          </BrowserRouter>
-        </div>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="dark">
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <div className="min-h-screen bg-background text-foreground">
+            <BrowserRouter>
+              <Header />
+              <MobileHeader />
+              <main className="min-h-[calc(100vh-16rem)]">
+                <Routes>
+                  <Route path="/" element={<AnalyzeContract />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/statistics" element={<Statistics />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+            </BrowserRouter>
+          </div>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

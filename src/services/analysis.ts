@@ -1,11 +1,24 @@
 
-import { NetworkType } from "@/state/store";
+export type NetworkType = "Avalanche Mainnet" | "Fuji" | "Local";
 
 export interface AnalysisOptions {
   slither: boolean;
   mythril: boolean;
   avalanche: boolean;
   gas: boolean;
+}
+
+export interface Issue {
+  id: string;
+  name: string;
+  description: string;
+  severity: "Critical" | "High" | "Medium" | "Low" | "Info";
+  code?: {
+    file: string;
+    line: number;
+    code: string;
+  };
+  references?: string[];
 }
 
 export interface AnalysisResult {
@@ -21,19 +34,6 @@ export interface AnalysisResult {
     low: { count: number; items: Issue[] };
     info: { count: number; items: Issue[] };
   };
-}
-
-export interface Issue {
-  id: string;
-  name: string;
-  description: string;
-  severity: "Critical" | "High" | "Medium" | "Low" | "Info";
-  code?: {
-    file: string;
-    line: number;
-    code: string;
-  };
-  references?: string[];
 }
 
 // Mock function to simulate analysis
