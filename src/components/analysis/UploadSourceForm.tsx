@@ -46,7 +46,6 @@ export function UploadSourceForm() {
   const { analysisOptions, network } = useAnalysisStore();
   const { setAnalysisModalOpen, setProgress } = useUIStore();
   const { startPolling, cancelAnalysis } = useAnalysisProgress();
-  
   const [isUploading, setIsUploading] = useState(false);
   
   const { 
@@ -292,7 +291,10 @@ export function UploadSourceForm() {
       </div>
 
       {/* Analysis Options */}
-      <AnalysisOptions />
+      {/* Analysis Options */}
+<AnalysisOptions
+  options={analysisOptions}
+/>
       
       {/* Form Errors */}
       {errors.files && (
