@@ -13,9 +13,18 @@ import Statistics from "./pages/Statistics";
 import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 
-// Create a client
 const App = () => {
-  const [queryClient] = useState(() => new QueryClient());
+  // Create a client once for the entire app
+  const [queryClient] = useState(
+    () => new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 5 * 60 * 1000, // 5 minutes
+          refetchOnWindowFocus: false,
+        },
+      },
+    })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
