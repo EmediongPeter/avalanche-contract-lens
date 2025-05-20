@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { X, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -38,6 +38,11 @@ export function AnalysisProgressModal({ onCancel, jobId }: AnalysisProgressModal
       return () => clearTimeout(timer);
     }
   }, [progress, setAnalysisModalOpen]);
+
+  const handleCancel = () => {
+    onCancel();
+    setAnalysisModalOpen(false);
+  };
 
   return (
     <Dialog open={analysisModalOpen} onOpenChange={setAnalysisModalOpen}>
@@ -89,7 +94,7 @@ export function AnalysisProgressModal({ onCancel, jobId }: AnalysisProgressModal
           <Button 
             variant="outline" 
             className="border-gray-700 hover:bg-gray-800"
-            onClick={onCancel}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
