@@ -32,11 +32,11 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner position="top-right" closeButton richColors />
-          <div className="min-h-screen bg-background text-foreground">
+          <div className="min-h-screen bg-background text-foreground flex flex-col">
             <BrowserRouter>
               <Header />
               <MobileHeader />
-              <main className="min-h-[calc(100vh-16rem)]">
+              <main className="flex-1 w-full py-6 px-4 md:px-0">
                 <Routes>
                   <Route path="/" element={<AnalyzeContract />} />
                   <Route path="/reports" element={<Reports />} />
@@ -44,6 +44,11 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
+              <footer className="w-full py-6 border-t border-gray-800">
+                <div className="container mx-auto text-center text-xs text-gray-500">
+                  <p>© {new Date().getFullYear()} AvaxAudit | Smart Contract Security Analysis Platform</p>
+                </div>
+              </footer>
             </BrowserRouter>
           </div>
         </TooltipProvider>

@@ -107,6 +107,10 @@ export default {
         'spin': {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' }
+        },
+        'pulse-glow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' }
         }
       },
       animation: {
@@ -115,11 +119,22 @@ export default {
         'fade-in': 'fade-in 0.3s ease-out',
         'fade-out': 'fade-out 0.3s ease-out',
         'slide-in': 'slide-in 0.3s ease-out',
-        'spin': 'spin 1.5s linear infinite'
+        'spin': 'spin 1.5s linear infinite',
+        'pulse-glow': 'pulse-glow 2s infinite'
       },
       boxShadow: {
         'neu': '5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff',
-        'neu-inset': 'inset 2px 2px 5px #d1d1d1, inset -2px -2px 5px #ffffff'
+        'neu-inset': 'inset 2px 2px 5px #d1d1d1, inset -2px -2px 5px #ffffff',
+        'glow-sm': '0 0 10px rgba(255, 62, 62, 0.3)',
+        'glow-md': '0 0 20px rgba(255, 62, 62, 0.5)',
+        'glow-lg': '0 0 30px rgba(255, 62, 62, 0.7)',
+        'card-dark': '0 8px 16px rgba(0, 0, 0, 0.5)'
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-primary': 'linear-gradient(90deg, var(--gradient-primary-start), var(--gradient-primary-end))',
+        'gradient-secondary': 'linear-gradient(90deg, var(--gradient-secondary-start), var(--gradient-secondary-end))'
       }
     }
   },

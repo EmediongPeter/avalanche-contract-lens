@@ -15,11 +15,14 @@ export function MobileHeader() {
   };
 
   return (
-    <header className="w-full bg-background border-b border-gray-800 md:hidden">
+    <header className="w-full bg-background border-b border-gray-800 md:hidden sticky top-0 z-20">
       <div className="container mx-auto">
-        <div className="flex items-center justify-between p-4">
-          <h1 className="text-xl font-bold text-red-500">
-            Avalanche Auditor
+        <div className="flex items-center justify-between p-3">
+          <h1 className="text-xl font-bold">
+            <Link to="/" className="flex items-center gap-1">
+              <span className="text-gradient font-extrabold">Avax</span>
+              <span className="bg-gradient-to-r from-[#FF3E3E] to-[#FF6F61] bg-clip-text text-transparent">Audit</span>
+            </Link>
           </h1>
           
           <div className="flex items-center space-x-2">
@@ -32,13 +35,13 @@ export function MobileHeader() {
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden"
             >
-              {isOpen ? <X /> : <Menu />}
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
           </div>
         </div>
         
         {isOpen && (
-          <nav className="border-t border-gray-800">
+          <nav className="border-t border-gray-800 animate-fade-in">
             <ul className="flex flex-col">
               <li>
                 <Link
@@ -47,7 +50,7 @@ export function MobileHeader() {
                     "px-4 py-3 block transition-colors",
                     isActive("/") 
                       ? "text-white bg-gray-800 border-l-2 border-red-500 font-medium" 
-                      : "text-gray-400 hover:text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-800/30"
                   )}
                   onClick={() => setIsOpen(false)}
                 >
@@ -61,7 +64,7 @@ export function MobileHeader() {
                     "px-4 py-3 block transition-colors",
                     isActive("/reports") 
                       ? "text-white bg-gray-800 border-l-2 border-red-500 font-medium" 
-                      : "text-gray-400 hover:text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-800/30"
                   )}
                   onClick={() => setIsOpen(false)}
                 >
@@ -75,7 +78,7 @@ export function MobileHeader() {
                     "px-4 py-3 block transition-colors",
                     isActive("/statistics") 
                       ? "text-white bg-gray-800 border-l-2 border-red-500 font-medium" 
-                      : "text-gray-400 hover:text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-800/30"
                   )}
                   onClick={() => setIsOpen(false)}
                 >

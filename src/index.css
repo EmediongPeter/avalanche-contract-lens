@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,6 +36,11 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 240 4.9% 83.9%;
+    
+    --gradient-primary-start: #FF3E3E;
+    --gradient-primary-end: #FF6F61;
+    --gradient-secondary-start: #111111;
+    --gradient-secondary-end: #333333;
   }
 
   .light {
@@ -65,6 +72,11 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 0 72.2% 50.6%;
+    
+    --gradient-primary-start: #FF3E3E;
+    --gradient-primary-end: #FF6F61;
+    --gradient-secondary-start: #f5f5f5;
+    --gradient-secondary-end: #e0e0e0;
   }
 }
 
@@ -75,6 +87,7 @@
   
   body {
     @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 
   html {
@@ -106,5 +119,13 @@
   
   .text-gradient-primary {
     @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent;
+  }
+  
+  .button-gradient {
+    @apply bg-gradient-to-r from-[#FF3E3E] to-[#FF6F61] hover:from-[#FF6F61] hover:to-[#FF3E3E] transition-all duration-300;
+  }
+  
+  .card-glass {
+    @apply backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl shadow-card-dark;
   }
 }

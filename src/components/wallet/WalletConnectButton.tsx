@@ -63,9 +63,10 @@ export function WalletConnectButton() {
       <Button 
         onClick={handleConnect} 
         disabled={isConnecting}
-        className="bg-gradient-to-r from-[#FF3E3E] to-[#FF6F61] hover:from-[#FF6F61] hover:to-[#FF3E3E] transition-all duration-300"
+        className="button-gradient transition-all duration-300"
+        size="sm"
       >
-        <Wallet className="w-5 h-5 mr-2" />
+        <Wallet className="w-4 h-4 mr-2" />
         {isConnecting ? "Connecting..." : "Connect Wallet"}
       </Button>
     );
@@ -74,13 +75,17 @@ export function WalletConnectButton() {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="border-gray-700 bg-gray-800 hover:bg-gray-700 transition-all duration-150">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="border-gray-700 bg-gray-800 hover:bg-gray-700 transition-all duration-150"
+        >
           <Wallet className="w-4 h-4 mr-2 text-red-500" />
           {address && truncateAddress(address)}
-          <ChevronDown className="w-4 h-4 ml-2" />
+          <ChevronDown className="w-3 h-3 ml-2 opacity-70" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-gray-900 border border-gray-800">
+      <DropdownMenuContent align="end" className="w-56 bg-gray-900 border border-gray-800 card-glass">
         <DropdownMenuLabel className="text-gray-400">Wallet</DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-gray-800" />
         <DropdownMenuItem 
