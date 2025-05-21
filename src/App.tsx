@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Header } from "@/components/layout/header";
 import { MobileHeader } from "@/components/layout/mobile-header";
+import { useIsMobile } from "@/hooks/use-mobile";
 import AnalyzeContract from "./pages/AnalyzeContract";
 import Reports from "./pages/Reports";
 import Statistics from "./pages/Statistics";
@@ -26,6 +27,8 @@ const App = () => {
     })
   );
 
+  const isMobile = useIsMobile();
+
   return (
     <ThemeProvider defaultTheme="dark">
       <QueryClientProvider client={queryClient}>
@@ -34,8 +37,7 @@ const App = () => {
           <Sonner position="top-right" closeButton richColors />
           <div className="min-h-screen bg-background text-foreground flex flex-col">
             <BrowserRouter>
-              <Header />
-              <MobileHeader />
+              {isMobile ? <MobileHeader /> : <Header />}
               <main className="flex-1 w-full py-6 px-4 md:px-0">
                 <Routes>
                   <Route path="/" element={<AnalyzeContract />} />

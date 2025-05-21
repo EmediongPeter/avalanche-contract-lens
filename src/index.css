@@ -86,12 +86,19 @@
   }
   
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased font-sans;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 
   html {
     @apply scroll-smooth;
+  }
+  
+  /* Add padding to the bottom on mobile to account for the bottom navigation */
+  @media (max-width: 767px) {
+    .min-h-screen {
+      padding-bottom: 4rem; /* Height of bottom navbar */
+    }
   }
 }
 
@@ -128,4 +135,10 @@
   .card-glass {
     @apply backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl shadow-card-dark;
   }
+  
+  /* Modern mobile styles */
+  .bottom-tab-active {
+    @apply relative before:absolute before:bottom-0 before:left-1/2 before:transform before:-translate-x-1/2 before:w-1/2 before:h-0.5 before:bg-red-500;
+  }
 }
+
