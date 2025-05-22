@@ -95,6 +95,6 @@ export const cancelAnalysis = async (jobId: string): Promise<void> => {
 // Type declaration for window object to store intervals
 declare global {
   interface Window {
-    __analysisIntervals?: Record<string, number>;
+    __analysisIntervals?: Record<string, NodeJS.Timeout>;
   }
 }

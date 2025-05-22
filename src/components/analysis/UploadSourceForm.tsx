@@ -43,10 +43,9 @@ const compilerVersions = [
 ];
 
 export function UploadSourceForm() {
-  const { analysisOptions, network } = useAnalysisStore();
+  const { analysisOptions, setAnalysisOption, network } = useAnalysisStore();
   const { setAnalysisModalOpen, setProgress } = useUIStore();
   const { startPolling, cancelAnalysis } = useAnalysisProgress();
-  
   const [isUploading, setIsUploading] = useState(false);
   
   const { 
@@ -292,7 +291,10 @@ export function UploadSourceForm() {
       </div>
 
       {/* Analysis Options */}
-      <AnalysisOptions />
+      <AnalysisOptions
+        options={analysisOptions}
+        onChange={setAnalysisOption}
+      />
       
       {/* Form Errors */}
       {errors.files && (
@@ -306,7 +308,7 @@ export function UploadSourceForm() {
       <div className="flex justify-end mt-6">
         <Button 
           type="submit"
-          className="bg-red-500 hover:bg-red-600 text-white"
+          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white"
           disabled={!isValid || isUploading || files.length === 0}
         >
           Run Analysis

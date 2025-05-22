@@ -106,21 +106,59 @@ export default function Reports() {
     }
   };
 
+  // Mobile report card component
+  const ReportCard = ({ report }: { report: AnalysisResult }) => {
+    return (
+      <Card className="mb-4 bg-gray-900 border-gray-800 card-glass overflow-hidden">
+        <CardContent className="p-4">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h3 className="font-mono text-sm">{report.contract.slice(0, 8)}...{report.contract.slice(-4)}</h3>
+              <p className="text-xs text-gray-400">{report.network}</p>
+            </div>
+            <span className={report.status === "Completed" ? "text-green-500 text-xs font-medium" : "text-yellow-500 text-xs font-medium"}>
+              {report.status}
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex">{renderSeverityIndicators(report)}</div>
+            <span className="text-xs text-gray-400">{formatDate(report.timestamp)}</span>
+          </div>
+          
+          <div className="flex justify-end">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => handleViewReport(report)}
+              className="text-xs px-3 py-1 h-7"
+            >
+              View Details
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <AnimatedContent>
-      <div className="container mx-auto py-8 px-4">
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-6">
+      <div className="container mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-gradient text-center sm:text-left">My Reports</h1>
+        
+        <Card className="card-glass border-gray-800/50">
+          <CardContent className="p-5 sm:p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-8">
-                <TabsTrigger value="all" className="text-base py-3">All Reports</TabsTrigger>
-                <TabsTrigger value="critical" className="text-base py-3">Critical Issues</TabsTrigger>
-                <TabsTrigger value="high" className="text-base py-3">High Issues</TabsTrigger>
-                <TabsTrigger value="medium-low" className="text-base py-3">Medium/Low Issues</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8 gap-1">
+                <TabsTrigger value="all" className="text-sm md:text-base py-2 md:py-3 transition-all">All</TabsTrigger>
+                <TabsTrigger value="critical" className="text-sm md:text-base py-2 md:py-3 transition-all">Critical</TabsTrigger>
+                <TabsTrigger value="high" className="text-sm md:text-base py-2 md:py-3 transition-all">High</TabsTrigger>
+                <TabsTrigger value="medium-low" className="text-sm md:text-base py-2 md:py-3 transition-all">Medium/Low</TabsTrigger>
               </TabsList>
               
               <TabsContent value={activeTab} className="mt-0">
-                <div className="rounded-md overflow-hidden">
+                {/* Desktop table view */}
+                <div className="rounded-md overflow-hidden hidden md:block">
                   <Table>
                     <TableHeader className="bg-gray-800">
                       <TableRow>
@@ -135,7 +173,7 @@ export default function Reports() {
                     <TableBody>
                       {currentReports.length > 0 ? (
                         currentReports.map((report) => (
-                          <TableRow key={report.id} className="hover:bg-gray-800/50">
+                          <TableRow key={report.id} className="hover:bg-gray-800/50 transition-colors">
                             <TableCell className="font-mono text-gray-300">{report.contract.slice(0, 8)}...{report.contract.slice(-4)}</TableCell>
                             <TableCell>{report.network}</TableCell>
                             <TableCell>
@@ -150,6 +188,7 @@ export default function Reports() {
                                 variant="ghost" 
                                 size="sm"
                                 onClick={() => handleViewReport(report)}
+                                className="hover:bg-gray-800"
                               >
                                 Details
                               </Button>
@@ -167,8 +206,21 @@ export default function Reports() {
                   </Table>
                 </div>
                 
+                {/* Mobile card view */}
+                <div className="md:hidden">
+                  {currentReports.length > 0 ? (
+                    currentReports.map((report) => (
+                      <ReportCard key={report.id} report={report} />
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-400">
+                      No reports found matching current filters
+                    </div>
+                  )}
+                </div>
+                
                 {filteredReports.length > 0 && (
-                  <div className="flex items-center justify-between mt-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4">
                     <div className="text-sm text-gray-400">
                       Showing {indexOfFirstReport + 1}-{Math.min(indexOfLastReport, filteredReports.length)} of {filteredReports.length} reports
                     </div>
