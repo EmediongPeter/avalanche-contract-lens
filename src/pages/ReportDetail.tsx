@@ -19,7 +19,7 @@ export default function ReportDetail() {
 
   useEffect(() => {
     if (reportId) {
-      const foundReport = reports.find(r => r.id === reportId);
+      const foundReport = reports.find(r => r.id === parseInt(reportId));
       setReport(foundReport || null);
     }
   }, [reportId, reports]);
@@ -178,12 +178,12 @@ export default function ReportDetail() {
                     Critical Issues ({report.issues.critical.count})
                   </h3>
                   <div className="space-y-3">
-                    {report.issues.critical.issues?.map((issue, index) => (
+                    {report.issues.critical.items?.map((issue, index) => (
                       <div key={index} className="bg-red-950/30 border border-red-800/50 rounded-lg p-4">
                         <h4 className="font-medium text-white mb-2">{issue.title || `Critical Issue ${index + 1}`}</h4>
                         <p className="text-gray-300 text-sm">{issue.description || "No description available"}</p>
-                        {issue.line && (
-                          <p className="text-red-400 text-xs mt-2">Line: {issue.line}</p>
+                        {issue.location && (
+                          <p className="text-red-400 text-xs mt-2">Location: {issue.location}</p>
                         )}
                       </div>
                     )) || (
@@ -204,12 +204,12 @@ export default function ReportDetail() {
                     High Issues ({report.issues.high.count})
                   </h3>
                   <div className="space-y-3">
-                    {report.issues.high.issues?.map((issue, index) => (
+                    {report.issues.high.items?.map((issue, index) => (
                       <div key={index} className="bg-orange-950/30 border border-orange-800/50 rounded-lg p-4">
                         <h4 className="font-medium text-white mb-2">{issue.title || `High Issue ${index + 1}`}</h4>
                         <p className="text-gray-300 text-sm">{issue.description || "No description available"}</p>
-                        {issue.line && (
-                          <p className="text-orange-400 text-xs mt-2">Line: {issue.line}</p>
+                        {issue.location && (
+                          <p className="text-orange-400 text-xs mt-2">Location: {issue.location}</p>
                         )}
                       </div>
                     )) || (
@@ -230,12 +230,12 @@ export default function ReportDetail() {
                     Medium Issues ({report.issues.medium.count})
                   </h3>
                   <div className="space-y-3">
-                    {report.issues.medium.issues?.map((issue, index) => (
+                    {report.issues.medium.items?.map((issue, index) => (
                       <div key={index} className="bg-yellow-950/30 border border-yellow-800/50 rounded-lg p-4">
                         <h4 className="font-medium text-white mb-2">{issue.title || `Medium Issue ${index + 1}`}</h4>
                         <p className="text-gray-300 text-sm">{issue.description || "No description available"}</p>
-                        {issue.line && (
-                          <p className="text-yellow-400 text-xs mt-2">Line: {issue.line}</p>
+                        {issue.location && (
+                          <p className="text-yellow-400 text-xs mt-2">Location: {issue.location}</p>
                         )}
                       </div>
                     )) || (
@@ -256,12 +256,12 @@ export default function ReportDetail() {
                     Low Issues ({report.issues.low.count})
                   </h3>
                   <div className="space-y-3">
-                    {report.issues.low.issues?.map((issue, index) => (
+                    {report.issues.low.items?.map((issue, index) => (
                       <div key={index} className="bg-green-950/30 border border-green-800/50 rounded-lg p-4">
                         <h4 className="font-medium text-white mb-2">{issue.title || `Low Issue ${index + 1}`}</h4>
                         <p className="text-gray-300 text-sm">{issue.description || "No description available"}</p>
-                        {issue.line && (
-                          <p className="text-green-400 text-xs mt-2">Line: {issue.line}</p>
+                        {issue.location && (
+                          <p className="text-green-400 text-xs mt-2">Location: {issue.location}</p>
                         )}
                       </div>
                     )) || (
@@ -282,12 +282,12 @@ export default function ReportDetail() {
                     Informational ({report.issues.info.count})
                   </h3>
                   <div className="space-y-3">
-                    {report.issues.info.issues?.map((issue, index) => (
+                    {report.issues.info.items?.map((issue, index) => (
                       <div key={index} className="bg-blue-950/30 border border-blue-800/50 rounded-lg p-4">
                         <h4 className="font-medium text-white mb-2">{issue.title || `Info ${index + 1}`}</h4>
                         <p className="text-gray-300 text-sm">{issue.description || "No description available"}</p>
-                        {issue.line && (
-                          <p className="text-blue-400 text-xs mt-2">Line: {issue.line}</p>
+                        {issue.location && (
+                          <p className="text-blue-400 text-xs mt-2">Location: {issue.location}</p>
                         )}
                       </div>
                     )) || (
