@@ -40,7 +40,7 @@ export default function Reports() {
     // In a real app, this would navigate to a detailed report view
     toast({
       title: "Report Details",
-      description: `Viewing details for contract ${report.contract}`,
+      description: `Viewing details for contract ${report.contract_address || report.contract_name}`,
     });
   };
 
@@ -136,15 +136,20 @@ export default function Reports() {
                       {currentReports.length > 0 ? (
                         currentReports.map((report) => (
                           <TableRow key={report.id} className="hover:bg-gray-800/50">
-                            <TableCell className="font-mono text-gray-300">{report.contract.slice(0, 8)}...{report.contract.slice(-4)}</TableCell>
+                            <TableCell className="font-mono text-gray-300">
+                              {report.contract_address 
+                                ? `${report.contract_address.slice(0, 8)}...${report.contract_address.slice(-4)}`
+                                : report.contract_name
+                              }
+                            </TableCell>
                             <TableCell>{report.network}</TableCell>
                             <TableCell>
-                              <span className={report.status === "Completed" ? "text-green-500" : "text-yellow-500"}>
-                                {report.status}
+                              <span className={report.status === "completed" ? "text-green-500" : "text-yellow-500"}>
+                                {report.status === "completed" ? "Completed" : report.status === "in_progress" ? "In Progress" : "Failed"}
                               </span>
                             </TableCell>
                             <TableCell>{renderSeverityIndicators(report)}</TableCell>
-                            <TableCell>{formatDate(report.timestamp)}</TableCell>
+                            <TableCell>{formatDate(report.created_at)}</TableCell>
                             <TableCell>
                               <Button 
                                 variant="ghost" 
