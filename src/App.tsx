@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { MobileHeader } from "@/components/layout/mobile-header";
 import AnalyzeContract from "./pages/AnalyzeContract";
 import Reports from "./pages/Reports";
+import ReportDetail from "./pages/ReportDetail";
 import Statistics from "./pages/Statistics";
 import NotFound from "./pages/NotFound";
 import { useState } from "react";
@@ -62,6 +63,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<AnalyzeContract />} />
                   <Route path="/reports" element={<Reports />} />
+                  <Route path="/reports/:reportId" element={<ReportDetail />} />
                   <Route path="/statistics" element={<Statistics />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
