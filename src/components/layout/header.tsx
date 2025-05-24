@@ -1,6 +1,7 @@
 
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { WalletButton } from "@/components/wallet/WalletButton";
 
 export function Header() {
   const location = useLocation();
@@ -10,13 +11,14 @@ export function Header() {
   };
 
   return (
-    <header className="w-full bg-background border-b border-gray-800">
+    <header className="w-full bg-background border-b border-gray-800 hidden md:block">
       <div className="container mx-auto">
         <div className="flex flex-col space-y-4 p-4 md:p-0">
-          <div className="flex items-center h-16">
-            <h1 className="text-2xl font-bold text-red-500">
-              Avalanche Smart Contract Auditor
+          <div className="flex items-center justify-between h-16">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF3E3E] to-[#FF6F61] bg-clip-text text-transparent">
+              AvaxAudit
             </h1>
+            <WalletButton />
           </div>
           
           <nav className="flex">
@@ -25,9 +27,9 @@ export function Header() {
                 <Link
                   to="/"
                   className={cn(
-                    "px-4 py-4 inline-block transition-colors",
+                    "px-4 py-4 inline-block transition-colors duration-150",
                     isActive("/") 
-                      ? "text-white border-b-2 border-red-500 font-medium" 
+                      ? "text-white border-b-2 border-[#FF3E3E] font-medium" 
                       : "text-gray-400 hover:text-white"
                   )}
                 >
@@ -38,9 +40,9 @@ export function Header() {
                 <Link
                   to="/reports"
                   className={cn(
-                    "px-4 py-4 inline-block transition-colors",
+                    "px-4 py-4 inline-block transition-colors duration-150",
                     isActive("/reports") 
-                      ? "text-white border-b-2 border-red-500 font-medium" 
+                      ? "text-white border-b-2 border-[#FF3E3E] font-medium" 
                       : "text-gray-400 hover:text-white"
                   )}
                 >
@@ -51,9 +53,9 @@ export function Header() {
                 <Link
                   to="/statistics"
                   className={cn(
-                    "px-4 py-4 inline-block transition-colors",
+                    "px-4 py-4 inline-block transition-colors duration-150",
                     isActive("/statistics") 
-                      ? "text-white border-b-2 border-red-500 font-medium" 
+                      ? "text-white border-b-2 border-[#FF3E3E] font-medium" 
                       : "text-gray-400 hover:text-white"
                   )}
                 >

@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,7 +13,9 @@ import { AnalysisProgressModal } from "./AnalysisProgressModal";
 import { useAnalysisProgress } from "@/hooks/use-analysis-progress";
 import { useUIStore, useAnalysisStore } from "@/state/store";
 import { NetworkType, submitContractByAddress, startAnalysis } from "@/services/analysis";
-import { toast } from "@/components/ui/use-toast";
+import toast from 'react-hot-toast';
+import { Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Define schema for form validation
 const formSchema = z.object({
@@ -29,6 +30,14 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+// Analysis tool descriptions
+const analysisDescriptions = {
+  slither: "Static analysis framework for Solidity that detects vulnerabilities, optimization opportunities, and code quality issues.",
+  mythril: "Security analysis tool that uses symbolic execution to find Ethereum smart contract vulnerabilities.",
+  avalanche: "Custom analysis rules specifically designed for Avalanche C-Chain smart contracts and ecosystem patterns.",
+  gas: "Gas usage optimization analysis to identify expensive operations and suggest improvements."
+};
 
 export function ContractAddressForm() {
   const { setAnalysisModalOpen } = useUIStore();
@@ -61,6 +70,7 @@ export function ContractAddressForm() {
       
       // Open the analysis modal
       setAnalysisModalOpen(true);
+      toast.success("Analysis started successfully!");
       
       // Step 1: Submit contract by address
       const contractId = await submitContractByAddress(
@@ -80,29 +90,17 @@ export function ContractAddressForm() {
       setJobId(auditId.toString());
       startPolling(auditId);
       
-      toast({
-        title: "Analysis Started",
-        description: "We're now analyzing your contract",
-      });
     } catch (error) {
       console.error("Error starting analysis:", error);
       setAnalysisModalOpen(false);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to start analysis",
-        variant: "destructive"
-      });
+      toast.error(error instanceof Error ? error.message : "Failed to start analysis");
     }
   };
   
   const handleCancel = () => {
     cancelAnalysis();
     setAnalysisModalOpen(false);
-    toast({
-      title: "Analysis Cancelled",
-      description: "You've cancelled the contract analysis",
-      variant: "destructive",
-    });
+    toast.error("Analysis cancelled");
   };
 
   // Check if at least one analysis option is selected
@@ -115,21 +113,21 @@ export function ContractAddressForm() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <Card className="p-6 bg-gray-850 border-gray-800">
+          <Card className="p-4 md:p-6 bg-gray-900/50 backdrop-blur-lg border-gray-700/50 rounded-2xl">
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Contract Details</h3>
+              <h3 className="text-lg font-semibold text-white">Contract Details</h3>
               
               <FormField
                 control={form.control}
                 name="contractAddress"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel>Contract Address *</FormLabel>
+                    <FormLabel className="text-gray-300">Contract Address *</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="0x..." 
                         {...field} 
-                        className="bg-gray-900 border-gray-700"
+                        className="bg-gray-800/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-[#FF3E3E] transition-colors"
                       />
                     </FormControl>
                     <FormMessage />
@@ -142,19 +140,19 @@ export function ContractAddressForm() {
                 name="network"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel>Network</FormLabel>
+                    <FormLabel className="text-gray-300">Network</FormLabel>
                     <Select 
                       value={field.value} 
                       onValueChange={(value: NetworkType) => field.onChange(value)}
                     >
                       <FormControl>
-                        <SelectTrigger className="bg-gray-900 border-gray-700">
+                        <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white focus:border-[#FF3E3E]">
                           <SelectValue placeholder="Select network" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className="bg-gray-900 border-gray-700">
-                        <SelectItem value="Avalanche Mainnet">Avalanche Mainnet</SelectItem>
-                        <SelectItem value="Fuji">Fuji</SelectItem>
+                      <SelectContent className="bg-gray-800 border-gray-600">
+                        <SelectItem value="Avalanche Mainnet" className="text-white hover:bg-gray-700">Avalanche Mainnet</SelectItem>
+                        <SelectItem value="Fuji" className="text-white hover:bg-gray-700">Fuji Testnet</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -164,90 +162,60 @@ export function ContractAddressForm() {
             </div>
           </Card>
           
-          <Card className="p-6 bg-gray-850 border-gray-800">
+          <Card className="p-4 md:p-6 bg-gray-900/50 backdrop-blur-lg border-gray-700/50 rounded-2xl">
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Analysis Options</h3>
+              <h3 className="text-lg font-semibold text-white">Analysis Options</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="slither"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox 
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>Slither Analysis</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="mythril"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox 
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>Mythril Analysis</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="avalanche"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox 
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>Avalanche-Specific Rules</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="gas"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox 
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>Gas Analysis</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
+              <div className="grid grid-cols-1 gap-4">
+                {(['slither', 'mythril', 'avalanche', 'gas'] as const).map((option) => (
+                  <FormField
+                    key={option}
+                    control={form.control}
+                    name={option}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-3 rounded-lg bg-gray-800/30 hover:bg-gray-800/50 transition-colors">
+                        <FormControl>
+                          <Checkbox 
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-[#FF3E3E] data-[state=checked]:to-[#FF6F61] border-gray-600"
+                          />
+                        </FormControl>
+                        <div className="flex items-center space-x-2 flex-1">
+                          <FormLabel className="text-gray-300 font-medium capitalize cursor-pointer">
+                            {option === 'avalanche' ? 'Avalanche-Specific Rules' : `${option} Analysis`}
+                          </FormLabel>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="w-4 h-4 text-gray-400 hover:text-gray-300 cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent 
+                              side="right" 
+                              className="max-w-xs bg-gray-800 border-gray-700 text-white"
+                            >
+                              <p className="text-sm">{analysisDescriptions[option]}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                ))}
               </div>
+              
+              {!atLeastOneSelected && (
+                <p className="text-sm text-amber-400 flex items-center space-x-2">
+                  <Info className="w-4 h-4" />
+                  <span>Please select at least one analysis option</span>
+                </p>
+              )}
             </div>
           </Card>
           
           <div className="flex justify-end">
             <Button 
               type="submit" 
-              className="bg-red-600 hover:bg-red-700"
+              className="w-full md:w-auto bg-gradient-to-r from-[#FF3E3E] to-[#FF6F61] hover:from-[#FF2E2E] hover:to-[#FF5F51] text-white border-0 px-8 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105"
               disabled={!form.formState.isValid || !atLeastOneSelected}
             >
               Run Analysis

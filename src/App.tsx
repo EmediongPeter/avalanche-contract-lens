@@ -11,7 +11,8 @@ import AnalyzeContract from "./pages/AnalyzeContract";
 import Reports from "./pages/Reports";
 import Statistics from "./pages/Statistics";
 import NotFound from "./pages/NotFound";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import toast, { Toaster as HotToaster } from 'react-hot-toast';
 
 const App = () => {
   // Create a client once for the entire app
@@ -32,6 +33,27 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <HotToaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#1F2937',
+                color: '#F9FAFB',
+                border: '1px solid #374151',
+              },
+              success: {
+                style: {
+                  background: 'linear-gradient(to right, #10B981, #059669)',
+                },
+              },
+              error: {
+                style: {
+                  background: 'linear-gradient(to right, #EF4444, #DC2626)',
+                },
+              },
+            }}
+          />
           <div className="min-h-screen bg-background text-foreground">
             <BrowserRouter>
               <Header />
