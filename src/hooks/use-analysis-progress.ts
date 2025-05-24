@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useUIStore } from "@/state/store";
 import { getAnalysisStatus, cancelAnalysis as cancelAnalysisService, getAnalysisResults } from "@/services/analysis";
@@ -13,7 +14,7 @@ export interface AnalysisProgressHookResult {
 }
 
 export function useAnalysisProgress(auditId?: number, interval = 2000): AnalysisProgressHookResult {
-  const { setProgress, setLoading, setCurrentReport } = useUIStore();
+  const { setProgress, setLoading } = useUIStore();
   const { toast } = useToast();
   const [error, setError] = useState<Error | null>(null);
   const [status, setStatus] = useState<"idle" | "polling" | "completed" | "error">("idle");
@@ -105,15 +106,6 @@ export function useAnalysisProgress(auditId?: number, interval = 2000): Analysis
           setStatus("completed");
           setLoading(false);
           setProgress(100); // Ensure 100% is shown when complete
-          
-          // Fetch and set the complete report data
-          try {
-            const reportData = await getAnalysisResults(auditIdRef.current);
-            setCurrentReport(reportData);
-          } catch (err) {
-            console.error("Failed to fetch report data:", err);
-          }
-          
           cancelPolling();
           toast({
             title: "Analysis Complete",

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,16 +9,56 @@ import { useReportsStore } from "@/state/store";
 import { AnimatedContent } from "@/components/ui/animated-content";
 import { AnalysisResult } from "@/services/analysis";
 import { formatDistanceToNow } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { fetchReports } from "@/services/reports";
+import { Loader2 } from "lucide-react";
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState("all");
-  const { reports, filter, setFilter } = useReportsStore();
+  const { reports, filter, setFilter, setReports } = useReportsStore();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [filteredReports, setFilteredReports] = useState<AnalysisResult[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const reportsPerPage = 5;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load reports from API when component mounts
+  useEffect(() => {
+    const loadReports = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        // Using a larger limit for faster fetching - we'll handle pagination client-side
+        const data = await fetchReports(0, 100);
+        // Map backend data to frontend format if necessary
+        const formattedReports = data.map(report => ({
+          id: report.id,
+          contract_id: report.id, // Adding contract_id (using report.id as fallback)
+          contract_address: '',  // You may need to adjust this based on your data structure
+          contract_name: `Report #${report.id}`,
+          network: 'Avalanche',  // Default network
+          status: 'completed',
+          issues: {
+            critical: { count: 0, items: [] },
+            high: { count: 0, items: [] },
+            medium: { count: 0, items: [] },
+            low: { count: 0, items: [] },
+            info: { count: 0, items: [] }
+          },
+          created_at: report.generated_at,
+          updated_at: report.generated_at // Adding updated_at (using generated_at as fallback)
+        }));
+        setReports(formattedReports);
+      } catch (err) {
+        console.error('Failed to fetch reports:', err);
+        setError('Failed to load reports. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadReports();
+  }, [setReports]);
 
   useEffect(() => {
     // Apply filters based on the active tab
@@ -38,7 +79,11 @@ export default function Reports() {
   }, [reports, activeTab, filter]);
 
   const handleViewReport = (report: AnalysisResult) => {
-    navigate(`/reports/${report.id}`);
+    // In a real app, this would navigate to a detailed report view
+    toast({
+      title: "Report Details",
+      description: `Viewing details for contract ${report.contract_address || report.contract_name}`,
+    });
   };
 
   // Calculate pagination
@@ -130,7 +175,31 @@ export default function Reports() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {currentReports.length > 0 ? (
+                      {isLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8">
+                            <div className="flex items-center justify-center">
+                              <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                              <span>Loading reports...</span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ) : error ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8 text-red-400">
+                            {error}
+                            <div className="mt-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => window.location.reload()}
+                              >
+                                Retry
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ) : currentReports.length > 0 ? (
                         currentReports.map((report) => (
                           <TableRow key={report.id} className="hover:bg-gray-800/50">
                             <TableCell className="font-mono text-gray-300">
@@ -152,9 +221,8 @@ export default function Reports() {
                                 variant="ghost" 
                                 size="sm"
                                 onClick={() => handleViewReport(report)}
-                                className="hover:bg-gray-700"
                               >
-                                View Details
+                                Details
                               </Button>
                             </TableCell>
                           </TableRow>
