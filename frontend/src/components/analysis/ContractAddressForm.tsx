@@ -34,7 +34,7 @@ export function ContractAddressForm() {
   const { setAnalysisModalOpen } = useUIStore();
   const { contractAddress, network, analysisOptions, setContractAddress, setNetwork, setAnalysisOption } = useAnalysisStore();
   const [jobId, setJobId] = useState<string>("");
-  const { startPolling, cancelAnalysis } = useAnalysisProgress(jobId);
+  const { startPolling, cancelAnalysis } = useAnalysisProgress(Number(jobId));
   
   // Initialize form with values from the store
   const form = useForm<FormValues>({
