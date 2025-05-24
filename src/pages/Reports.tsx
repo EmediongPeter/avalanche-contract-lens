@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -9,11 +8,13 @@ import { useReportsStore } from "@/state/store";
 import { AnimatedContent } from "@/components/ui/animated-content";
 import { AnalysisResult } from "@/services/analysis";
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState("all");
   const { reports, filter, setFilter } = useReportsStore();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [filteredReports, setFilteredReports] = useState<AnalysisResult[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const reportsPerPage = 5;
@@ -37,11 +38,7 @@ export default function Reports() {
   }, [reports, activeTab, filter]);
 
   const handleViewReport = (report: AnalysisResult) => {
-    // In a real app, this would navigate to a detailed report view
-    toast({
-      title: "Report Details",
-      description: `Viewing details for contract ${report.contract_address || report.contract_name}`,
-    });
+    navigate(`/reports/${report.id}`);
   };
 
   // Calculate pagination
@@ -155,8 +152,9 @@ export default function Reports() {
                                 variant="ghost" 
                                 size="sm"
                                 onClick={() => handleViewReport(report)}
+                                className="hover:bg-gray-700"
                               >
-                                Details
+                                View Details
                               </Button>
                             </TableCell>
                           </TableRow>
